@@ -8,12 +8,12 @@ class DB
 		Users_db.execute( "select team_name, irn from users where team_name='#{team_name}'" ) do |row|
 			# row[0] => team_name
 			# row[1] => irn
-			p row
-			puts ":::::::::::::::::::::::::"
 			if row[0].nil?
 				# its is not nil meaning
 				# the team exists. Returing 0
 				return true
+			else 
+				return false
 			end
 		end		
 	end
@@ -24,11 +24,20 @@ class DB
 		check = check_username(team_name)
 		if check.nil?
 			# username does not exist... 
-			#Creating account by inserting into the table
+			# Creating account by inserting into the table
 			Users_db.execute("INSERT INTO Users (team_name, irn, score) 
             VALUES (?, ?, ?)", [team_name, irn, "0"])
 		end
 	end
+	def self.add_points(team_name)
+		check = check_username(team_name)
+		# checking to make sure the team name exists
+		if check == false
+			# it does exist.
+			Users_db.execute("UPDATE Users SET score = score + 50 WHERE team_name = '#{team_name}'")
+			# updated users score.
+		end
+	end
 end
-
-puts DB.create_username("mike", "kik")
+DB.add_points("mike")
+#puts DB.create_username("mike", "kik")
