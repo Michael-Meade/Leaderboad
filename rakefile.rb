@@ -4,7 +4,7 @@ require "sqlite3"
 task :users do
 		# used to create a table called, users. 
 		# column names: team_name, irn, score
-		db = SQLite3::Database.new "sql/users.db"
+		db = SQLite3::Database.new "users.db"
 		db.execute <<-SQL
 		create table Users (
 			team_name varchar(50),
@@ -20,7 +20,7 @@ task :flags do
 	# add flags to the databasas
 	if !File.exist?('sql/flags.db')
 			# flags.db doesnt exist!
-			db = SQLite3::Database.new("sql/flags.db")
+			db = SQLite3::Database.new("flags.db")
 			db.execute <<-SQL 
 			create table Flags (
 					flag varchar(50),

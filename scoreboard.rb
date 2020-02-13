@@ -1,16 +1,16 @@
 require 'sinatra'
-# import the sql class
 require_relative 'sql/db'
 #ruby server.rb -p $PORT -o $IP
 post '/signup' do
     team_name = params[:t_name]
     real_name = params[:irn]
+    puts team_name
     # making sure team_name AND real_name is not empty
     if team_name.empty? || real_name.empty?
         "error"
     else
-        SQL.create_user(team_name, real_name)
-        redirect '/LeaderBoard'
+        # check if username. if it does, adds to db.
+        DB.create_username(team_name, real_name)
     end
 end
 get '/signup' do

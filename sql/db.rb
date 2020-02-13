@@ -8,11 +8,13 @@ class DB
 		Users_db.execute( "select team_name, irn from users where team_name='#{team_name}'" ) do |row|
 			# row[0] => team_name
 			# row[1] => irn
+			p row
 			if row[0].nil?
 				# its is not nil meaning
-				# the team exists. Returing 0
+				# the team doesnt exists.
 				return true
 			else 
+				# the team name exists :(
 				return false
 			end
 		end		
@@ -41,5 +43,5 @@ class DB
 		end
 	end
 end
-DB.add_points("mike")
+#DB.add_points("mike")
 #puts DB.create_username("mike", "kik")
