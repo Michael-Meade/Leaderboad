@@ -30,6 +30,8 @@ class DB
 		end
 	end
 	def self.add_points(team_name)
+		# if the user finds a correct flag.
+		# this method will give the team their points
 		check = check_username(team_name)
 		# checking to make sure the team name exists
 		if check == false
