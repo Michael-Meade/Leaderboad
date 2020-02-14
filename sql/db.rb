@@ -42,6 +42,12 @@ class DB
 			# updated users score.
 		end
 	end
+	def self.get_scores
+		# create a hash of all the rows and scores.
+		Users_db.execute("select team_name, score from Users order by score desc")
+	end
 end
 #DB.add_points("mike")
 #puts DB.create_username("mike", "kik")
+
+DB.get_scores

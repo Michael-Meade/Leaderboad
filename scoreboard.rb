@@ -17,5 +17,6 @@ get '/signup' do
     erb :'signup'
 end
 get '/LeaderBoard' do
-    erb :'leaderBoard'
+    @r = DB.get_scores
+    erb :'leaderboard'
 end
