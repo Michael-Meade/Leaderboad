@@ -1,4 +1,6 @@
 require "sqlite3"
+require 'random_password'
+require 'net/ssh'
 class DB
 	# load the db
 	Users_db = SQLite3::Database.new "users.db"
@@ -19,6 +21,18 @@ class DB
 			end
 		end		
 	end
+	def self.add_user(team_name, pass)
+		#useradd -p encrypted_password newuser
+		#usermod -a -G dew newuser
+		# SSH into the ctf VPS and creates a user account.
+		Net::SSH.start('159.65.216.57', 'root', :password => "d") do |ssh|
+			# creates user and adds password. 
+			output = ssh.exec!("useradd -m -p encrypted_password #{team_name}")
+			# Add the user to the group dew
+			ssh.exec!("usermod -a -G dew #{team_name}")
+		end
+
+	end
 	def self.create_username(team_name, irn)
 		# checks to make sure the name doesnt exist. If it returns nil 
 		# then we know that it doesnt exist.
@@ -27,8 +41,21 @@ class DB
 		if check.nil?
 			# username does not exist... 
 			# Creating account by inserting into the table
-			Users_db.execute("INSERT INTO Users (team_name, irn, score) 
-            VALUES (?, ?, ?)", [team_name, irn, "0"])
+			random_password = RandomPassword.new(length: 10, digits: 4, symbols: 4)
+			pass = random_password.generate
+			Users_db.execute("INSERT INTO Users (team_name, irn, score, password) 
+            VALUES (?, ?, ?, ?)", [team_name, irn, "0", pass])
+            add_user(team_name, pass)
+
+		end
+	end
+	def self.create_output(team_name)
+		# create an file that the user downloads
+		# file contains account information ( to login, etc )
+		f = File.open("output/#{team_name}.txt", "w")
+		Users_db.execute( "select * from users where team_name='#{team_name}'" ) do |row|
+			f.write("Team Name: #{row[0]}\n IRN: #{row[1]}\n pass: #{row[3]}")
+			f.close
 		end
 	end
 	def self.add_points(team_name)
@@ -47,7 +74,4 @@ class DB
 		Users_db.execute("select team_name, score from Users order by score desc")
 	end
 end
-#DB.add_points("mike")
-#puts DB.create_username("mike", "kik")
 
-DB.get_scores

@@ -1,20 +1,28 @@
-require 'sinatra'
+ require 'sinatra'
 require 'json'
 require_relative 'lib/utils'
 require_relative 'sql/db'
-#ruby server.rb -p $PORT -o $IP
+
+#ruby server.rb -p $PORT -o $IP   
 post '/signup' do
     team_name = params[:t_name]
     real_name = params[:irn]
-    puts team_name
     # making sure team_name AND real_name is not empty
     if team_name.empty? || real_name.empty?
         "error"
     else
         # check if username. if it does, adds to db.
         DB.create_username(team_name, real_name)
+        @team_name
+        DB.create_output(team_name)
+        #redirect 'leaderboard'
+        send_file "output/#{team_name}.txt", :filename => "#{team_name}.txt", :type => 'Application/octet-stream'
+        
     end
-    redirect 'leaderboard'
+    #redirect 'leaderboard'
+end
+get '/download' do
+     
 end
 get '/api/enable_signup' do
     # This enables signup. This will cause the index page to be redirected
@@ -53,7 +61,13 @@ get '/' do
     end
 end
 get '/signup' do
-    erb :'signup'
+    # if its set to true it will redirect to signup
+    # if it set to false it will redirect to lb
+    if  Utils.signup_switch
+        erb :'signup'
+    else
+        redirect 'leaderboard'
+    end
     
 end
 get '/leaderboard' do
