@@ -1,0 +1,7 @@
+cp -rv /root/.ssh /home/dog1
+usermod -a -G dew  sudo dog1
+chown -R /home/dog1/.ssh
+chmod -R 0600 root:dog1 /home/dog1/.ssh/*
+sed -i '/^AllowUsers/ s/$/ dog1/' /etc/ssh/sshd_config
+sudo service ssh restart
+

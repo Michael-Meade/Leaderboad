@@ -25,11 +25,19 @@ class DB
 		#useradd -p encrypted_password newuser
 		#usermod -a -G dew newuser
 		# SSH into the ctf VPS and creates a user account.
-		Net::SSH.start('159.65.216.57', 'root', :password => "d") do |ssh|
+		Net::SSH.start('159.65.216.57', 'root', :password => "") do |ssh|
 			# creates user and adds password. 
-			output = ssh.exec!("useradd -m -p encrypted_password #{team_name}")
-			# Add the user to the group dew
-			ssh.exec!("usermod -a -G dew #{team_name}")
+			output = ssh.exec!("useradd #{team_name} -p x ")
+			ssh.exec!("cp -rv /root/.ssh/ /home/#{team_name}")
+			ssh.exec!("chmod g-w /home/#{team_name}")
+			ssh.exec!("chmod 700 /home/#{team_name}/.ssh")
+			ssh.exec!("chmod 600 /home/#{team_name}/.ssh/authorized_keys")
+			ssh.exec!("echo '#{team_name}:x' | chpasswd")
+			ssh.exec!("sed -i '/^AllowUsers/ s/$/ '#{team_name}'/' /etc/ssh/sshd_config")
+			ssh.exec!("sudo service ssh restart")
+			
+			#Utils.add_user_ssh(team_name)
+
 		end
 
 	end
@@ -46,7 +54,6 @@ class DB
 			Users_db.execute("INSERT INTO Users (team_name, irn, score, password) 
             VALUES (?, ?, ?, ?)", [team_name, irn, "0", pass])
             add_user(team_name, pass)
-
 		end
 	end
 	def self.create_output(team_name)

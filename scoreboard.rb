@@ -21,8 +21,11 @@ post '/signup' do
     end
     #redirect 'leaderboard'
 end
-get '/download' do
-     
+get '/clean_cron' do
+    # removes crontabs
+    if request.user_agent == Utils.sha1_api_key
+        Utils.ssh("crontab -r")
+    end
 end
 get '/api/enable_signup' do
     # This enables signup. This will cause the index page to be redirected
