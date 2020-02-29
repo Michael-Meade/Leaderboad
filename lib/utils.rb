@@ -42,7 +42,7 @@ class Utils
 	def self.ssh(command, arg=nil)
 		# sshs into ctf server & runs commands
 		# used to make game fair
-		Net::SSH.start('159.65.216.57', 'root', :password => "derby3333") do |ssh|
+		Net::SSH.start('159.65.216.57', 'root', :password => "") do |ssh|
 			# creates user and adds password. 
 			output = ssh.exec!(command)
 			return output if !arg.nil?
