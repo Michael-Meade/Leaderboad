@@ -3,6 +3,7 @@ require "sqlite3"
 
 task :install do 
 	sh "gem install net-ssh"
+	sh "gem install sinatra"
 	sh "apt-get install libsqlite3-dev"
 	sh "gem install sqlite3"
 	sh "gem install random_password"
