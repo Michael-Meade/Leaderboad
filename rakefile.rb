@@ -7,6 +7,7 @@ task :install do
 	sh "apt-get install libsqlite3-dev"
 	sh "gem install sqlite3"
 	sh "gem install random_password"
+	sh "sudo apt-get install sqlite3 libsqlite3-dev"
 end
 task :users do
 		# used to create a table called, users. 
