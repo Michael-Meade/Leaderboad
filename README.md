@@ -24,7 +24,7 @@ The purpose of the scoreboard server is to handle the creation of user accounts,
 Running ```rake install``` will install all the needed gems and download sqlite. It assumes that the user does not have sqlite installed.<br><br>
 
 ## Start the scoring.
-- Add the following command to your crontab file. 
-<br>```*/1 * * * * /bin/bash -l -c 'cd /root/BlueVsBlue/test && ruby cron.rb'```
+- Add the following command to your crontab file. <br>
+```*/1 * * * * /bin/bash -l -c 'cd /root/BlueVsBlue/test && ruby cron.rb'```
 
 
