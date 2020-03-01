@@ -1,6 +1,12 @@
 require "sqlite3"
 
 
+task :install do 
+	sh "gem install net-ssh"
+	sh "apt-get install libsqlite3-dev"
+	sh "gem install sqlite3"
+	sh "gem install random_password"
+end
 task :users do
 		# used to create a table called, users. 
 		# column names: team_name, irn, score
