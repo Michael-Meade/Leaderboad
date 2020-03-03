@@ -1,6 +1,7 @@
 require "sqlite3"
 require 'random_password'
 require 'net/ssh'
+require 'json'
 class DB
 	# load the db
 	Users_db = SQLite3::Database.new "users.db"
@@ -12,18 +13,15 @@ class DB
 			# row[1] => irn
 			p row
 			if row[0].nil?
-				# its is not nil meaning
 				# the team doesnt exists.
 				return true
 			else 
-				# the team name exists :(
+				# the team name exists
 				return false
 			end
 		end		
 	end
 	def self.add_user(team_name, pass)
-		#useradd -p encrypted_password newuser
-		#usermod -a -G dew newuser
 		# SSH into the ctf VPS and creates a user account.
 		Net::SSH.start('159.65.216.57', 'root', :password => "") do |ssh|
 			# creates user and adds password. 
@@ -32,11 +30,9 @@ class DB
 			ssh.exec!("chmod g-w /home/#{team_name}")
 			ssh.exec!("chmod 700 /home/#{team_name}/.ssh")
 			ssh.exec!("chmod 600 /home/#{team_name}/.ssh/authorized_keys")
-			ssh.exec!("echo '#{team_name}:x' | chpasswd")
+			ssh.exec!("echo '#{team_name}:#{password}' | chpasswd")
 			ssh.exec!("sed -i '/^AllowUsers/ s/$/ '#{team_name}'/' /etc/ssh/sshd_config")
 			ssh.exec!("sudo service ssh restart")
-			
-			#Utils.add_user_ssh(team_name)
 
 		end
 
@@ -53,8 +49,11 @@ class DB
 			pass = random_password.generate
 			Users_db.execute("INSERT INTO Users (team_name, irn, score, password) 
             VALUES (?, ?, ?, ?)", [team_name, irn, "0", pass])
+            # SSH into the players box and creates the username
             add_user(team_name, pass)
 		end
+		
+		#INSERT INTO Users (team_name, irn, score, password) VALUES("name", "nou", "69", "LOOOO");
 	end
 	def self.create_output(team_name)
 		# create an file that the user downloads
@@ -76,9 +75,22 @@ class DB
 			# updated users score.
 		end
 	end
+	def self.get_scores_api
+		# creates the hash instance 
+		# this method is used to get the top 10 users 
+		# used for the api.
+		lb = {}
+		count = 0
+		Users_db.execute("select team_name, score from Users order by score desc").each do |row|
+			if count.to_i <= 10
+				lb[count.to_i] = [row[0], row[1]]
+				count += 1
+			end
+		end
+	lb.to_json
+	end
 	def self.get_scores
 		# create a hash of all the rows and scores.
 		Users_db.execute("select team_name, score from Users order by score desc")
 	end
 end
-

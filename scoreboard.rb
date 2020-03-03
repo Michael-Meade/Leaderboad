@@ -21,11 +21,23 @@ post '/signup' do
     end
     #redirect 'leaderboard'
 end
+get '/api/deny_login/:team_name' do
+        Utils.remove_user_ssh(params['team_name'])
+end
 get '/clean_cron' do
     # removes crontabs
     if request.user_agent == Utils.sha1_api_key
         Utils.ssh("crontab -r")
     end
+end
+get '/api/cron_stop'  do
+    # stops cron
+    if request.user_agent.to_s == Utils.sha1_api_key.to_s
+        Utils.cron_stop
+    end
+end
+get '/api/lb' do 
+    DB.get_scores_api
 end
 get '/api/enable_signup' do
     # This enables signup. This will cause the index page to be redirected
