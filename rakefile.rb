@@ -78,6 +78,37 @@ namespace :install do
 		puts "\n\n\n"
 	end
 end
+
+namespace :cron do
+	desc "Runs the script that gives the users their points."
+	task :run do
+		sh "ruby crontab.rb"
+	end
+	desc "Create a cronjob that is used for scoring."
+	task :install do
+		# get the current directory..
+		current_directory = File.expand_path File.dirname(__FILE__)
+		stdout = run_command("crontab -l")
+		dir_count = 0
+		stdout..to_s.split.each do |l|
+			# it assumes that there should only be
+			# one crontab in the file with this directory inside it.
+			# it will remove any others so there is only one
+			# gets the amount of times that the directory is inside the crontab
+			if l.include?(current_directory)
+				dir_count += 1
+			end
+		end
+		if dir_count.to_i !=  0
+			puts "Please edit crontabs and remove any other crons that have the same directory"
+		else
+			run_command("(crontab -l 2>/dev/null || true; echo '*/5 * * * * cd #{current_directory} && ruby crontab.rb')  | crontab -")
+			puts "Installed the scoring cron job..."
+		end               
+	end
+end
+
+
 task :users do
 	    require "sqlite3"
 		# used to create a table called, users. 
