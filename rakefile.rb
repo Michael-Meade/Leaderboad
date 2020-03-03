@@ -24,7 +24,7 @@ def self.run_command(command)
 		return false
 	end
 end
-namespace "install" do
+namespace :install do
 	# This namespace is used to install all the packages and gems that is needed for
 	# the Player server to work.
 	task :apache2 do
@@ -78,19 +78,7 @@ namespace "install" do
 		puts "\n\n\n"
 	end
 end
-	task :install do 
-		begin
-			sh "gem install net-ssh"
-			sh "gem install sinatra"
-			sh "apt-get install libsqlite3-dev"
-			sh "gem install sqlite3"
-			sh "gem install random_password"
-			sh "sudo apt-get install sqlite3 libsqlite3-dev"
-			sh "sqlite3 users.db"
-		rescue => e
-			puts "Eror with install: #{e}"
-		end
-	end
+	
 task :users do
 	    require "sqlite3"
 		# used to create a table called, users. 
@@ -139,3 +127,18 @@ desc "push to remotes"
 task :push do
   system "git push -u origin master"
 end
+=begin
+	task :install do 
+		begin
+			sh "gem install net-ssh"
+			sh "gem install sinatra"
+			sh "apt-get install libsqlite3-dev"
+			sh "gem install sqlite3"
+			sh "gem install random_password"
+			sh "sudo apt-get install sqlite3 libsqlite3-dev"
+			sh "sqlite3 users.db"
+		rescue => e
+			puts "Eror with install: #{e}"
+		end
+	end
+=end
