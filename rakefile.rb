@@ -78,7 +78,6 @@ namespace :install do
 		puts "\n\n\n"
 	end
 end
-	
 task :users do
 	    require "sqlite3"
 		# used to create a table called, users. 
@@ -142,3 +141,4 @@ end
 		end
 	end
 =end
+

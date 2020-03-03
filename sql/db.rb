@@ -30,7 +30,11 @@ class DB
 			ssh.exec!("chmod g-w /home/#{team_name}")
 			ssh.exec!("chmod 700 /home/#{team_name}/.ssh")
 			ssh.exec!("chmod 600 /home/#{team_name}/.ssh/authorized_keys")
+<<<<<<< HEAD
 			ssh.exec!("echo '#{team_name}:#{password}' | chpasswd")
+=======
+			ssh.exec!("echo '#{team_name}:#{pass}' | chpasswd")
+>>>>>>> c30d3cec218932ab5f1c1ebc625fd5524793a7ce
 			ssh.exec!("sed -i '/^AllowUsers/ s/$/ '#{team_name}'/' /etc/ssh/sshd_config")
 			ssh.exec!("sudo service ssh restart")
 
