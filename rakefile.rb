@@ -27,6 +27,7 @@ end
 namespace :install do
 	# This namespace is used to install all the packages and gems that is needed for
 	# the Player server to work.
+	desc "Installs apache2"
 	task :apache2 do
 		# checking to see if apache2 is installed.
 		checking_apache = run_command("apache2 -v")
@@ -47,7 +48,9 @@ namespace :install do
 			end
 		end 
 	end
+	desc "Installs the needed gems"
 	task :gems do
+		# The order: 1
 		# Install the needed gems for scoring server
 		["net-ssh", "sinatra", "sqlite3", "random_password"].each do |gem_name|
 			# if return true then gem is installed
@@ -60,8 +63,14 @@ namespace :install do
 				puts "\n\n\n"
 			end
 		end
+	# runs install:deps
+	# 3
+	Rake::Task[:apache2].invoke
 	end
+	desc "Installs the the deps deps."
 	task :deps do
+
+		# The order: 2
 		# Installing the needed deps for the leaderboard.
 		["sudo apt-get install sqlite3 libsqlite3-dev", "sudo apt-get install sqlite3"].each do |dep|
 			puts "Installing #{dep}..."
@@ -77,6 +86,7 @@ namespace :install do
 		end
 		puts "\n\n\n"
 	end
+	Rake::Task[:deps].invoke
 end
 
 namespace :cron do
