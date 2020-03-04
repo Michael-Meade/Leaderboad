@@ -25,6 +25,45 @@ def self.run_command(command)
 	end
 end
 namespace :install do
+	desc "Installs the needed gems"
+	task gems: "deps" do
+		# The order: 1
+		# Install the needed gems for scoring server
+		["net-ssh", "sinatra", "sqlite3", "random_password"].each do |gem_name|
+			# if return true then gem is installed
+			# if check_gems_installed(gem_name) is NOT true
+			# then it will install the gem. Skips install if true
+			if !check_gems_installed(gem_name)
+				# Installing the gem
+				puts "Installing #{gem_name}..."
+				run_command("gem install #{gem_name}")
+				puts "\n\n\n"
+			end
+		end
+	end
+	
+	desc "Installs the the deps deps."
+	task deps: "apache2" do
+
+		# The order: 2
+		# Installing the needed deps for the leaderboard.
+		["sudo apt-get install sqlite3 libsqlite3-dev", "sudo apt-get install sqlite3"].each do |dep|
+			puts "Installing #{dep}..."
+			stdout, stderr, status = Open3.capture3(dep)
+		end
+		["sqlite3 -version"].each do |check|
+			# Making sure the stuff is actually installed.
+			if run_command(check)
+				puts "#{check.split(" ")[0]} is Installed!\n".green
+			else 
+				puts "#{check.split(" ")[0]} is not Installed.\n".red
+			end
+		end
+		puts "\n\n\n"
+	end
+	
+	
+	
 	# This namespace is used to install all the packages and gems that is needed for
 	# the Player server to work.
 	desc "Installs apache2"
@@ -46,53 +85,15 @@ namespace :install do
 			else
 				puts "Apache2 is not installed.\n\n\n"
 			end
-		end 
-	end
-	desc "Installs the needed gems"
-	task :gems do
-		# The order: 1
-		# Install the needed gems for scoring server
-		["net-ssh", "sinatra", "sqlite3", "random_password"].each do |gem_name|
-			# if return true then gem is installed
-			# if check_gems_installed(gem_name) is NOT true
-			# then it will install the gem. Skips install if true
-			if !check_gems_installed(gem_name)
-				# Installing the gem
-				puts "Installing #{gem_name}..."
-				run_command("gem install #{gem_name}")
-				puts "\n\n\n"
-			end
 		end
-	# runs install:deps
-	# 3
-	Rake::Task[:apache2].invoke
 	end
-	desc "Installs the the deps deps."
-	task :deps do
-
-		# The order: 2
-		# Installing the needed deps for the leaderboard.
-		["sudo apt-get install sqlite3 libsqlite3-dev", "sudo apt-get install sqlite3"].each do |dep|
-			puts "Installing #{dep}..."
-			stdout, stderr, status = Open3.capture3(dep)
-		end
-		["sqlite3 -version"].each do |check|
-			# Making sure the stuff is actually installed.
-			if run_command(check)
-				puts "#{check.split(" ")[0]} is Installed!\n".green
-			else 
-				puts "#{check.split(" ")[0]} is not Installed.\n".red
-			end
-		end
-		puts "\n\n\n"
-	end
-	Rake::Task[:deps].invoke
+	
 end
 
 namespace :cron do
 	desc "Runs the script that gives the users their points."
 	task :run do
-		sh "ruby crontab.rb"
+		sh "ruby cron.rb"
 	end
 	desc "Create a cronjob that is used for scoring."
 	task :install do
@@ -100,7 +101,7 @@ namespace :cron do
 		current_directory = File.expand_path File.dirname(__FILE__)
 		stdout = run_command("crontab -l")
 		dir_count = 0
-		stdout..to_s.split.each do |l|
+		stdout.to_s.split.each do |l|
 			# it assumes that there should only be
 			# one crontab in the file with this directory inside it.
 			# it will remove any others so there is only one

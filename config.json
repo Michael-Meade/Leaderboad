@@ -1,4 +1,5 @@
 {
 	"signup":"true",
-	"api-key":""
+	"api-key":"",
+	"alerts": "true"
 }
