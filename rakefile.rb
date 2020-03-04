@@ -35,7 +35,7 @@ namespace :install do
 			# then it will install the gem. Skips install if true
 			if !check_gems_installed(gem_name)
 				# Installing the gem
-				puts "Installing #{gem_name}..."
+				puts "running #{gem_name}..."
 				run_command("gem install #{gem_name}")
 				puts "\n\n\n"
 			end
@@ -43,12 +43,10 @@ namespace :install do
 	end
 	
 	desc "Installs the the deps deps."
-	task deps: "apache2" do
-
-		# The order: 2
+	task :deps do
 		# Installing the needed deps for the leaderboard.
 		["sudo apt-get install sqlite3 libsqlite3-dev", "sudo apt-get install sqlite3"].each do |dep|
-			puts "Installing #{dep}..."
+			puts "Running #{dep}..."
 			stdout, stderr, status = Open3.capture3(dep)
 		end
 		["sqlite3 -version"].each do |check|
@@ -93,7 +91,7 @@ end
 namespace :cron do
 	desc "Runs the script that gives the users their points."
 	task :run do
-		sh "ruby cron.rb"
+		sh "ruby crontab.rb"
 	end
 	desc "Create a cronjob that is used for scoring."
 	task :install do
@@ -111,7 +109,7 @@ namespace :cron do
 			end
 		end
 		if dir_count.to_i !=  0
-			puts "Please edit crontabs and remove any other crons that have the same directory"
+			puts "Please edit crontabs and remove any other crons that have the same directory".red
 		else
 			run_command("(crontab -l 2>/dev/null || true; echo '*/5 * * * * cd #{current_directory} && ruby crontab.rb')  | crontab -")
 			puts "Installed the scoring cron job..."
@@ -134,7 +132,9 @@ task :users do
 		);
 		SQL
 end
-###
+
+
+
 ### Rake tasks for git commit and deploy
 ###
 ##use it if you want commit only -no pushing
