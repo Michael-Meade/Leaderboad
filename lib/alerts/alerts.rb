@@ -12,7 +12,7 @@ class Alerts
 		end
 	end
 	def self.send_message(error, type)
-		# send the erro in discord
+		# send the error in discord
 		bot = Discordrb::Commands::CommandBot.new token: '', client_id:  380583698791399424, prefix: '.'
 		bot.send_message("624437567487737866", "**#{type}**\n\n\n" + error.to_s)
 	end

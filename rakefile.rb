@@ -1,21 +1,5 @@
 require 'open3'
-begin
-	require "colorize"
-rescue LoadError 
-	# if colorize is NOT installed then the error is rescued and colorize is installed
-	stdout, stderr, status = Open3.capture3("gem install colorize")
-	if stdout.include?("Successfully installed")
-		puts "Installed colorize....\n\n"
-	end
-end 
-
-def self.check_gems_installed(gem_name)
-	begin
-		stdout, stderr, status = Open3.capture3("gem list -i '^#{gem_name}$")
-	rescue => e
-		puts "ERROR!\n\n\n\n\n #{e}".red
-	end
-end
+require "colorize"
 def self.run_command(command)
 	# this method runs the command that is inputed
 	begin
@@ -25,43 +9,6 @@ def self.run_command(command)
 	end
 end
 namespace :install do
-	desc "Installs the needed gems"
-	task gems: "deps" do
-		# The order: 1
-		# Install the needed gems for scoring server
-		["net-ssh", "sinatra", "sqlite3", "random_password"].each do |gem_name|
-			# if return true then gem is installed
-			# if check_gems_installed(gem_name) is NOT true
-			# then it will install the gem. Skips install if true
-			if !check_gems_installed(gem_name)
-				# Installing the gem
-				puts "running #{gem_name}..."
-				run_command("gem install #{gem_name}")
-				puts "\n\n\n"
-			end
-		end
-	end
-	
-	desc "Installs the the deps deps."
-	task :deps do
-		# Installing the needed deps for the leaderboard.
-		["sudo apt-get install sqlite3 libsqlite3-dev", "sudo apt-get install sqlite3"].each do |dep|
-			puts "Running #{dep}..."
-			stdout, stderr, status = Open3.capture3(dep)
-		end
-		["sqlite3 -version"].each do |check|
-			# Making sure the stuff is actually installed.
-			if run_command(check)
-				puts "#{check.split(" ")[0]} is Installed!\n".green
-			else 
-				puts "#{check.split(" ")[0]} is not Installed.\n".red
-			end
-		end
-		puts "\n\n\n"
-	end
-	
-	
-	
 	# This namespace is used to install all the packages and gems that is needed for
 	# the Player server to work.
 	desc "Installs apache2"
@@ -85,7 +32,6 @@ namespace :install do
 			end
 		end
 	end
-	
 end
 
 namespace :cron do
@@ -168,19 +114,4 @@ desc "push to remotes"
 task :push do
   system "git push -u origin master"
 end
-=begin
-	task :install do 
-		begin
-			sh "gem install net-ssh"
-			sh "gem install sinatra"
-			sh "apt-get install libsqlite3-dev"
-			sh "gem install sqlite3"
-			sh "gem install random_password"
-			sh "sudo apt-get install sqlite3 libsqlite3-dev"
-			sh "sqlite3 users.db"
-		rescue => e
-			puts "Eror with install: #{e}"
-		end
-	end
-=end
 
