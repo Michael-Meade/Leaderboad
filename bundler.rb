@@ -24,6 +24,7 @@ gemfile do
   gem 'net-ssh', require: false
   gem 'sinatra', require: false
   gem 'sqlite3', require: true
+  gem 'httparty', require: false
   gem 'random_password', require: false
 end
 puts "Installed the needed gems".green
