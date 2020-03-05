@@ -35,4 +35,4 @@ The purpose of the scoreboard server is to handle the creation of user accounts,
   The scoring Server purpose is to host the signup, leaderboard and the cron job that gives the players their points
   
 ### Scoring file
-   The scoring file is the file in which the cronjob stored on the  ```players server``` will read. This file should have the right permissions and be readable and editable by all users. The scoring file should also be accessable by the internet. This is th file that the player will enter their username in. The username has to be the exact same as the one they signed up, if it is not then they will not get any points.
+   The scoring file is the file in which the cronjob stored on the  ```player server``` will read. This file should have the right permissions and be readable and editable by all users. The scoring file should also be accessable by the internet. This is th file that the player will enter their username in. The username has to be the exact same as the one they signed up, if it is not then they will not get any points.
