@@ -6,7 +6,7 @@ The purpose of the scoreboard server is to handle the creation of user accounts,
 ### cron.rb
   - Scrapes the playing server's index.html file and if the team name exists it will reward them 50 points. Ran by the cronjob minute.<br>
   
-### scoreboard.rb
+### Scoreboard.rb
   - The acutally web app thats purpose is to run scoreboard and allow users to sign up.
   - It's a good idea to use the <a href="https://www.digitalocean.com/community/tutorials/how-to-install-and-use-screen-on-an-ubuntu-cloud-server">screen command</a>. So that if something happens, the web server will always be up.<br>
   
@@ -20,8 +20,9 @@ The purpose of the scoreboard server is to handle the creation of user accounts,
   
 ### config.json
   - the config file. This holds the api key and also the settings<br>
-  - if the user wants to use the alert feature, edit the alert file in lib\alerts with your discord api key
-
+  - if the user wants to use the alert feature, edit the alert file in lib\alerts with your discord api key.
+  - The api key job is to authentication the requests by the discord bot. It would be dangerous to allow anyone to use some of the api features like disable & enable signup, clear cron, and the other api methods. The bot uses a discord bot to control that setting. If the user wanted to they could use a discord bot that when a certain command is sent, it will request the method on the scoring server and do what ever the task funtion was. The api key should look like this: 0c76e5b4-dc74-4b75-9987-e91c529d3aae. The api key should be the same on the scoring server and locally stored where ever the discord bot is running. Before sending the request, the discord bot will read its locally stored config file and sha1 the value. On the Scoring server, before the request is executed the server reads the locally stored config file and sha1 the api key. The script then reads the useragent and if it matches with the api key that the sha1 hashed valued that the requst did then it will do the function. 
+  
 ### Start the scoring.
 - Add the following command to your crontab file. <br>
 ```*/1 * * * * /bin/bash -l -c 'cd /root/BlueVsBlue/test && ruby cron.rb'```
