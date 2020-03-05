@@ -22,7 +22,7 @@ gemfile do
   gem 'colorize', require: true
   gem 'net-ssh', require: false
   gem 'sinatra', require: false
-  gem 'sqlite3', require: false
+  gem 'sqlite3', require: true
   gem 'random_password', require: false
 end
 puts "Installed the needed gems".green
@@ -37,7 +37,23 @@ end
 		puts "#{check.split(" ")[0]} is not Installed.".red
 	end
 end
+
+
+# creating the cron job that will give users 
+# their points
 puts "Creating the crontab for scoring. ".green
+# Get the current directory 
 current_directory = File.expand_path File.dirname(__FILE__)
 run_command("(crontab -l 2>/dev/null || true; echo '*/1 * * * * cd #{current_directory} && ruby crontab.rb')  | crontab -")
-puts "Crontab has been added.".green
+puts "Crontab has been added.\n".green
+# create the database used for the scoreboard
+db = SQLite3::Database.new "users.db"
+db.execute <<-SQL
+create table Users (
+	team_name varchar(50),
+	irn varchar(50),
+	score varchar(5),
+	password text);
+);
+SQL
+puts "Created users.db\n".green
