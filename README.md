@@ -20,7 +20,7 @@ The purpose of the scoreboard server is to handle the creation of user accounts,
   
 ### config.json
   - the config file. This holds the api key and also the settings<br>
-  
+  - if the user wants to use the alert feature, edit the alert file in lib\alerts with your discord api key
 
 ### Start the scoring.
 - Add the following command to your crontab file. <br>
