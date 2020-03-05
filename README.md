@@ -29,7 +29,7 @@ The purpose of the scoreboard server is to handle the creation of user accounts,
 
 ## Terms
 ### Player Server
-  The player server is the environment where the players will compete. The only requirment for the player server is to have a web server that is accessable.
+  The player server is the environment where the players will compete. The only requirment for the player server is to have a web server that is accessable. The playing server must be accessable by password authentication, This is because a ruby gem is used to SSH into the player sever and add the users. The user needs to change the IP and password of this setting in the: 
 
 ### Scoring Server
   The scoring Server purpose is to host the signup, leaderboard and the cron job that gives the players their points
