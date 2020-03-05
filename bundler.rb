@@ -1,4 +1,5 @@
 require 'bundler/inline'
+require 'fileutils'
 require_relative 'lib/strings'
 require 'open3'
 def self.check_installed(gem_name)
@@ -46,6 +47,7 @@ puts "Creating the crontab for scoring. ".green
 current_directory = File.expand_path File.dirname(__FILE__)
 run_command("(crontab -l 2>/dev/null || true; echo '*/1 * * * * cd #{current_directory} && ruby crontab.rb')  | crontab -")
 puts "Crontab has been added.\n".green
+
 # create the database used for the scoreboard
 db = SQLite3::Database.new "users.db"
 db.execute <<-SQL
@@ -57,3 +59,7 @@ create table Users (
 );
 SQL
 puts "Created users.db\n".green
+
+
+# create output folder
+FileUtils.mkdir_p 'output'
