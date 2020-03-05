@@ -4,7 +4,7 @@ The purpose of the scoreboard server is to handle the creation of user accounts,
 
 ## Files
 ### cron.rb
-  - Scrapes the playing server's index.html file and if the team name exists it will reward them 50 points. Ran by the cronjob every minute.<br>
+  - Scrapes the playing server's index.html file and if the team name exists it will reward them 50 points. Ran by the cronjob minute.<br>
   
 ### scoreboard.rb
   - The acutally web app thats purpose is to run scoreboard and allow users to sign up.
