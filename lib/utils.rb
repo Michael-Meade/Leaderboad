@@ -3,6 +3,9 @@ require 'net/ssh'
 require 'json'
 require 'digest/sha1'
 class Utils
+	def self.discord_config(value)
+		read = JSON.parse(File.read("discord.json"))[value]
+	end
 	def self.read_confg(value)
 		read = JSON.parse(File.read("config.json"))[value]
 	end

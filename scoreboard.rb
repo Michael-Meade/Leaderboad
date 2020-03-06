@@ -22,18 +22,30 @@ post '/signup' do
     #redirect 'leaderboard'
 end
 get '/api/deny_login/:team_name' do
+    begin
         Utils.remove_user_ssh(params['team_name'])
+    rescue => e
+        check_status(e, "deny_login")
+    end
 end
 get '/clean_cron' do
     # removes crontabs
-    if request.user_agent == Utils.sha1_api_key
-        Utils.ssh("crontab -r")
+    begin
+        if request.user_agent == Utils.sha1_api_key
+            Utils.ssh("crontab -r")
+        end
+    rescue => e
+        check_status(e, "clean_cron")
     end
 end
 get '/api/cron_stop'  do
     # stops cron
-    if request.user_agent.to_s == Utils.sha1_api_key.to_s
-        Utils.cron_stop
+    begin
+        if request.user_agent.to_s == Utils.sha1_api_key.to_s
+            Utils.cron_stop
+        end
+    rescue => e
+        check_status(e, "Cront_stop")
     end
 end
 get '/api/lb' do 
