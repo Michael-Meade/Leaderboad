@@ -8,7 +8,6 @@ class Alerts
 		if Utils.read_confg("alerts")
 			# alerts is set to config
 			send_message(error, type)
-
 		end
 	end
 	def self.send_message(error, type)

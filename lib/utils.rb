@@ -2,6 +2,8 @@ require 'json'
 require 'net/ssh'
 require 'json'
 require 'digest/sha1'
+require 'open3'
+
 class Utils
 	def self.discord_config(value)
 		read = JSON.parse(File.read("discord.json"))[value]
@@ -12,6 +14,9 @@ class Utils
 	def self.signup_switch
 		read = JSON.parse(File.read("config.json"))["signup"]
 		return true if read == "true"
+	end
+	def self.commands(command)
+		stdout, stderr, status = Open3.capture3(command).to_a
 	end
 	def self.sha1_api_key
 		Digest::SHA1.hexdigest(JSON.parse(File.read("config.json"))["api-key"].to_s)

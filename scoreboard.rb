@@ -2,7 +2,12 @@
 require 'json'
 require_relative 'lib/utils'
 require_relative 'sql/db'
+enable :logging
+logger = Logger.new("app.log")
 
+configure do
+        use Rack::CommonLogger, logger
+end
 #ruby server.rb -p $PORT -o $IP   
 post '/signup' do
     team_name = params[:t_name]
@@ -49,6 +54,7 @@ get '/api/cron_stop'  do
     end
 end
 get '/api/lb' do 
+    # get the lb for discord
     DB.get_scores_api
 end
 get '/api/enable_signup' do
