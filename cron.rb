@@ -1,6 +1,5 @@
 require_relative 'sql/db'
 require_relative 'lib/lb'
-require 'pp'
 require 'httparty'
 begin
 	response  = HTTParty.get("http://104.31.72.21/")
