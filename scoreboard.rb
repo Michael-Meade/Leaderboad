@@ -17,11 +17,12 @@ post '/signup' do
         team_name = params[:t_name]
         real_name = params[:irn]
         # making sure team_name AND real_name is not empty
-        if team_name.empty? || real_name.empty?
-            "Error: real_name or team_name already exists in the database."
+        if team_name.empty? || real_name.empty? || team_name.include?("/") || team_name.include?("\\")
+            "Error: real_name or team_name already exists in the database.\n Dont use \ or /"
         else
-            # check if username. if it does, adds to db.
-            if DB.create_username(team_name, real_name) != false
+            # check if username. if it does, adds to db. & make sure that it 
+            # it didnt failed
+            if  DB.create_username(team_name, real_name)
                 @team_name
                 DB.create_output(team_name)
                 #redirect 'leaderboard'

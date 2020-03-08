@@ -13,6 +13,6 @@ class Alerts
 	def self.send_message(error, type)
 		# send the error in discord
 		bot = Discordrb::Commands::CommandBot.new token: Utils.discord_config("token").to_s, client_id: Utils.discord_config("channel_id").to_s , prefix: '.'
-		bot.send_message("624437567487737866", "**#{type}**\n\n\n" + error.to_s)
+		bot.send_message("329791322573635585", "**#{type}**\n\n\n" + error.to_s)
 	end
 end

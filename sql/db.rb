@@ -58,6 +58,7 @@ class DB
 	            VALUES (?, ?, ?, ?)", [team_name, irn, "0", pass])
 	            # SSH into the players box and creates the username
 	            add_user(team_name, pass)
+	        true
 			end
 		rescue => e
 			Alerts.check_status(e, "\\sql\\db.rb - create_username(team_name, irn)")
