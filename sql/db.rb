@@ -10,7 +10,7 @@ class DB
 		# make sure the team_name and
 		# the real_name is not already taken.
 		begin
-			Users_db.execute( "select team_name, irn from users where team_name='#{team_name}'" ) do |row|
+			Users_db.execute( "select team_name, irn from users where team_name='#{team_name.strip}'" ) do |row|
 				# row[0] => team_name
 				if row[0].nil?
 					# the team doesnt exists.
@@ -84,9 +84,9 @@ class DB
 		begin
 			check = check_username(team_name)
 			# checking to make sure the team name exists
-			if check == false
+			if check.to_s == false.to_s
 				# it does exist.
-				Users_db.execute("UPDATE Users SET score = score + 50 WHERE team_name = '#{team_name}'")
+				Users_db.execute("UPDATE Users SET score = score + 50 WHERE team_name = '#{team_name.strip}'")
 				# updated users score.
 			end
 		rescue => e
