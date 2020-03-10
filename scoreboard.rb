@@ -22,7 +22,9 @@ post '/signup' do
         else
             # check if username. if it does, adds to db. & make sure that it 
             # it didnt failed
-            if  DB.create_username(team_name, real_name)
+           db =  DB.create_username(team_name, real_name)
+           # p db
+            if db    
                 @team_name
                 DB.create_output(team_name)
                 #redirect 'leaderboard'

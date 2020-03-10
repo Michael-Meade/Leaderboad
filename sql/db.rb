@@ -10,13 +10,15 @@ class DB
 		# make sure the team_name and
 		# the real_name is not already taken.
 		begin
-			Users_db.execute( "select team_name, irn from users where team_name='#{team_name.strip}'" ) do |row|
+			Users_db.execute( "select team_name, irn from users where team_name='#{team_name}'" ) do |row|
 				# row[0] => team_name
 				if row[0].nil?
 					# the team doesnt exists.
+					puts "tre"
 					return true
 				else 
 					# the team name exists
+					puts ":::"
 					return false
 				end
 			end
@@ -27,7 +29,7 @@ class DB
 	def self.add_user(team_name, pass)
 		begin
 			# SSH into the ctf VPS and creates a user account.
-			Net::SSH.start('159.65.216.57', 'root', :password => "") do |ssh|
+			Net::SSH.start('159.65.216.57', 'root', :password => "derby3333") do |ssh|
 				# creates user and adds password. 
 				output = ssh.exec!("useradd #{team_name} -p x ")
 				ssh.exec!("cp -rv /root/.ssh/ /home/#{team_name}")
@@ -36,7 +38,6 @@ class DB
 				ssh.exec!("chmod 600 /home/#{team_name}/.ssh/authorized_keys")
 				ssh.exec!("echo '#{team_name}:#{pass}' | chpasswd")
 				ssh.exec!("sed -i '/^AllowUsers/ s/$/ '#{team_name}'/' /etc/ssh/sshd_config")
-				ssh.exec!("sudo service ssh restart")
 			end
 		rescue => e
 			Alerts.check_status(e, "\\sql\\db.rb - add_user(team_name, pass)")
@@ -48,17 +49,20 @@ class DB
 		# then we know that it doesnt exist.
 		# everyone starts with a score of 0
 		begin
-			check = check_username(team_name)
+			check = self.check_username(team_name)
 			if check.nil?
 				# username does not exist... 
 				# Creating account by inserting into the table
+				puts ":::"
 				random_password = RandomPassword.new(length: 10, digits: 4, symbols: 4)
 				pass = random_password.generate
 				Users_db.execute("INSERT INTO Users (team_name, irn, score, password) 
 	            VALUES (?, ?, ?, ?)", [team_name, irn, "0", pass])
 	            # SSH into the players box and creates the username
+	            puts "DDD:::D:D"
 	            add_user(team_name, pass)
-	        true
+	            puts "FINAL::::::"
+	            @results = true
 			end
 		rescue => e
 			Alerts.check_status(e, "\\sql\\db.rb - create_username(team_name, irn)")

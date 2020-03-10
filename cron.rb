@@ -3,9 +3,8 @@ require_relative 'lib/lb'
 require 'httparty'
 begin
 	response  = HTTParty.get("http://159.65.216.57")
-	team_name = response.parsed_response.to_s
-	puts team_name
-	p response.code
+	team_name = response.parsed_response.to_s.strip
+	p team_name
 	if response.code.to_s == "403"
 		# if cant access to scoring file
 		# will send message in discord channel that
