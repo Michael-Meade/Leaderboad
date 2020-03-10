@@ -29,7 +29,8 @@ class DB
 	def self.add_user(team_name, pass)
 		begin
 			# SSH into the ctf VPS and creates a user account.
-			Net::SSH.start('159.65.216.57', 'root', :password => "") do |ssh|
+
+			Net::SSH.start(Utils.read_confg("ssh-ip").to_s, 'root', :password => Utils.read_confg("ssh-pass").to_s) do |ssh|
 				# creates user and adds password. 
 				output = ssh.exec!("useradd #{team_name} -p x ")
 				ssh.exec!("cp -rv /root/.ssh/ /home/#{team_name}")
