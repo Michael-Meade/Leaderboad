@@ -48,7 +48,7 @@ class Utils
 		f.close
 	end
 	def self.cron_stop
-		Net::SSH.start('159.65.216.57', 'root', :password => "derby3333") do |ssh|
+		Net::SSH.start('159.65.216.57', 'root', :password => "") do |ssh|
 			# creates user and adds password. 
 			output = ssh.exec!("sudo service cron stop")
 		end
